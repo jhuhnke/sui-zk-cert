@@ -1,5 +1,5 @@
 module certificate::Certificate {
-    use sui::object::{Self, ID, UID}; 
+    use sui::object::{Self, UID}; 
     use sui::tx_context::{Self, TxContext};
     use sui::transfer; 
     use std::string;

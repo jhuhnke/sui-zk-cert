@@ -64,12 +64,12 @@ module escrow::escrow_tests {
     }
 
     // ===== Destroy =====
-    fun destroy_test<T: store>(self: Escrow<T>, scenario: &mut ts::Scenario) {
-        ts::next_tx(scenario, OWNER); 
-        {
-            destroy(self, ts::ctx(scenario)); 
-        }
-    }
+    //fun destroy_test<T: store>(self: Escrow<T>, scenario: &mut ts::Scenario) {
+    //    ts::next_tx(scenario, OWNER); 
+    //    {
+    //        destroy(self, ts::ctx(scenario)); 
+    //    }
+    //}
 
     // ===== Run Tests =====
     #[test]
@@ -87,19 +87,19 @@ module escrow::escrow_tests {
         let scenario = &mut scenario_val; 
         let item = create_item(scenario, OWNER, 3); 
         new_test(item, OWNER, ALICE, scenario); 
-        let escrow_object = ts::take_shared<Escrow<T>>(scenario); 
+        let escrow_object = ts::take_from_sender<Escrow<T>>(scenario); 
         transfer_to_sender_test(escrow_object); 
         ts::end(scenario_val); 
     }
 
     //#[test]
-    // fun test_burn() {
-        //let scenario_val = init_test(); 
-        //let scenario = &mut scenario_val; 
-        // let item = create_item(scenario, OWNER, 3); 
-        //new_test(item, OWNER, ALICE, scenario); 
-        //let escrow_object = ts::take_shared<Escrow<T>>(scenario); 
-        //destroy_test(escrow_object, scenario); 
-        //ts::end(scenario_val);
-    }
+     //fun test_burn() {
+    //    let scenario_val = init_test(); 
+    //    let scenario = &mut scenario_val; 
+    //    let item = create_item(scenario, OWNER, 3); 
+    //    new_test(item, OWNER, ALICE, scenario); 
+    //    let escrow_object = ts::take_shared<Escrow<T>>(scenario); 
+    //    destroy_test(escrow_object, scenario); 
+    //    ts::end(scenario_val);
+    //}
 }
