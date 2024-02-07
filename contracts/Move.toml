@@ -6,3 +6,4 @@ Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-fram
 
 [addresses]
 certificate = "0x0"
+escrow = "0x1"
