@@ -1,5 +1,5 @@
 module certificate::Certificate {
-    use sui::object::{Self, UID}; 
+    use sui::object::{Self, ID, UID}; 
     use sui::tx_context::{Self, TxContext};
     use sui::transfer; 
     use std::string;
@@ -9,6 +9,11 @@ module certificate::Certificate {
         id: UID, 
         age: bool, 
         country: string::String, 
+    }
+
+    struct MintCertificateEvent has copy, drop {
+        object_id: ID, 
+        creator: address
     }
 
     struct Ownership has key {
@@ -33,6 +38,11 @@ module certificate::Certificate {
             age: age, 
             country: string::utf8(country)
         }; 
+
+        event::emit(MintCertificateEvent {
+            object_id: object::uid_to_inner(&cert.id), 
+            creator: sender
+        }); 
 
         transfer::transfer(cert, sender)
     }

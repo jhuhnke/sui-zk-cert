@@ -1,6 +1,6 @@
 module escrow::verifier {
     use sui::event;
-    use sui::groth16::{Self, bls12381, bn254};
+    use sui::groth16::{Self, bn254};
     use std::vector;
     use std::debug;
 

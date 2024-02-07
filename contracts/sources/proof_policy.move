@@ -2,7 +2,6 @@ module escrow::proof_policy {
     use sui::transfer_policy::{
         Self as policy, 
         TransferPolicy, 
-        TransferPolicyCap, 
         TransferRequest
     }; 
 
