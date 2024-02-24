@@ -1,8 +1,9 @@
 [package]
 name = "contracts"
+version = "0.0.0"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "releases/sui-v0.29.0-release" } 
 
 [addresses]
 certificate = "0x0"

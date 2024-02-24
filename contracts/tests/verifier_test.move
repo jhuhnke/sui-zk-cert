@@ -1,9 +1,9 @@
 #[test_only]
+#[allow(unused_function)]
 module escrow::verifier_tests {
     // ===== Imports =====
     use sui::groth16::{Self, bn254}; 
     use std::vector; 
-    use std::debug;
 
     use escrow::verifier::{
         do_verify, 
@@ -47,6 +47,6 @@ module escrow::verifier_tests {
     }
 
     // ===== Run Tests =====
-    #[test]
+    
     
 }

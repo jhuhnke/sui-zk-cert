@@ -1,11 +1,16 @@
 #[test_only]
 module certificate::mint_cert_tests {
     use sui::test_scenario as ts; 
-    use certificate::Certificate::{Certificate};
+    use certificate::Certificate::{
+        Certificate, 
+        LockedCertificate
+    };
     use certificate::Certificate::{
         test_init, 
         mint,
-        burn
+        burn, 
+        unlock_cert, 
+        age
     }; 
 
     const OWNER: address = @0x11; 
@@ -21,20 +26,35 @@ module certificate::mint_cert_tests {
     }
 
     // ===== Minting =====
-    fun mint_test(age: bool, country: vector<u8>, scenario: &mut ts::Scenario) {
-        ts::next_tx(scenario, ALICE); 
+    fun mint_test(age: bool, country: vector<u8>, scenario: &mut ts::Scenario, by_owner: bool) {
+        let actor = if (by_owner) { OWNER } else { ALICE }; 
+        ts::next_tx(scenario, actor); 
         {
-            mint(age, country, ts::ctx(scenario)); 
+            mint(age, country, actor, ts::ctx(scenario)); 
         }; 
     }
 
     // ===== Burning =====
-    fun burn_test(scenario: &mut ts::Scenario) {
-        ts::next_tx(scenario, ALICE); 
+    fun burn_test(scenario: &mut ts::Scenario, by_owner: bool) {
+        let actor = if (by_owner) { OWNER } else { ALICE }; 
+        ts::next_tx(scenario, actor); 
         {
-            let cert = ts::take_from_sender<Certificate>(scenario); 
-            burn(cert); 
+            let cert = ts::take_from_sender<LockedCertificate<Certificate>>(scenario);  
+            let unlocked_cert = unlock_cert(cert, ts::ctx(scenario)); 
+            burn(unlocked_cert); 
         }; 
+    }
+
+    // ===== Unlocking =====
+    fun unlock_test(scenario: &mut ts::Scenario, by_owner: bool) {
+        let actor = if (by_owner) { OWNER } else { ALICE }; 
+        ts::next_tx(scenario, actor); 
+        {
+            let locked_cert = ts::take_from_sender<LockedCertificate<Certificate>>(scenario); 
+            let unlocked_cert = unlock_cert(locked_cert, ts::ctx(scenario));
+            assert!(*age(&unlocked_cert) == true, 999); 
+            burn(unlocked_cert);
+        }
     }
 
     // ===== Run Tests =====
@@ -45,7 +65,8 @@ module certificate::mint_cert_tests {
         mint_test(
             true, 
             b"United States", 
-            scenario
+            scenario, 
+            false
         ); 
         ts::end(scenario_val); 
     }
@@ -57,9 +78,48 @@ module certificate::mint_cert_tests {
         mint_test(
             true, 
             b"United States", 
-            scenario
+            scenario, 
+            true
         ); 
-        burn_test(scenario); 
+        burn_test(scenario, true); 
+        ts::end(scenario_val); 
+    }
+
+    #[test]
+    #[expected_failure]
+    fun test_burn_nonowner() {
+        let scenario_val = init_test(); 
+        let scenario = &mut scenario_val; 
+        mint_test(
+            true, 
+            b"United States", 
+            scenario, 
+            false
+        ); 
+        burn_test(scenario, false); 
+        ts::end(scenario_val); 
+    }
+
+    #[test]
+    fun test_unlock_by_owner() {
+        let scenario_val = init_test(); 
+        let scenario = &mut scenario_val; 
+
+        mint_test(true, b"United States", scenario, true); 
+        unlock_test(scenario, true); 
+        
+        ts::end(scenario_val); 
+    }
+
+    #[test]
+    #[expected_failure]
+    fun test_unlock_by_non_owner() {
+        let scenario_val = init_test(); 
+        let scenario = &mut scenario_val; 
+
+        mint_test(true, b"United States", scenario, false); 
+        unlock_test(scenario, false); 
+        
         ts::end(scenario_val); 
     }
 }
