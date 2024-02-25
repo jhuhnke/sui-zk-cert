@@ -15,7 +15,6 @@ module escrow::mint_cert_tests {
     const OWNER: address = @0x11; 
     const ALICE: address = @0xAA; 
     const MINT_AMOUNT: u64 = 50_000_000;
-    const PAYMENT_AMOUNT: u64 = 40_000_000;
     
     fun init_test(): ts::Scenario {
         let scenario_val = ts::begin(OWNER); 
@@ -50,7 +49,7 @@ module escrow::mint_cert_tests {
         ts::next_tx(scenario, ALICE);
         {
             let payment = ts::take_from_sender<Coin<USDC>>(scenario);
-            claim_certificate(true, b"United States", payment, ts::ctx(scenario));
+            claim_certificate(true, b"United States", payment, 42, ts::ctx(scenario));
         };
     }
 
