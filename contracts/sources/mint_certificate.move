@@ -24,6 +24,11 @@ module escrow::certificate {
         creator: address
     }
 
+    struct PaymentReceivedEvent has copy, drop {
+        receiver: address, 
+        amount: u64,
+    }
+
     struct Ownership has key {
         id: UID
     }
@@ -65,6 +70,11 @@ module escrow::certificate {
         assert!(coin::value(&payment) >= PAYMENT_AMOUNT, E_INSUFFICIENT_PAYMENT);
 
         transfer::public_transfer(payment, CONTRACT_OWNER);
+
+        event::emit(PaymentReceivedEvent {
+            receiver: CONTRACT_OWNER, 
+            amount: PAYMENT_AMOUNT, 
+        }); 
 
         let sender = tx_context::sender(ctx);
         let cert = Certificate {
