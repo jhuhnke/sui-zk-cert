@@ -78,7 +78,6 @@ module escrow::certificate {
             creator: sender,
         });
 
-        // Transfer the certificate to the sender
         transfer::transfer(cert, sender);
     }
 

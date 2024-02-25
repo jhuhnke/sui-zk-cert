@@ -1,9 +1,9 @@
 #[test_only]
 module escrow::mint_cert_tests {
     use sui::test_scenario as ts; 
+    use sui::transfer;
     use sui::coin::{Self, Coin};
     use escrow::usdc::USDC; 
-    use escrow::usdc::{mint_usdc};
     use escrow::certificate::{Certificate};
     use escrow::certificate::{
         test_init, 
@@ -14,13 +14,15 @@ module escrow::mint_cert_tests {
 
     const OWNER: address = @0x11; 
     const ALICE: address = @0xAA; 
-    const PAYMENT_AMOUNT: u64 = 40_000_000; 
+    const MINT_AMOUNT: u64 = 50_000_000;
     
     fun init_test(): ts::Scenario {
         let scenario_val = ts::begin(OWNER); 
         let scenario = &mut scenario_val; 
         {
             test_init(ts::ctx(scenario)); 
+            let payment: Coin<USDC> = coin::mint_for_testing(MINT_AMOUNT, ts::ctx(scenario));
+            transfer::public_transfer(payment, ALICE);
         }; 
         scenario_val
     }
@@ -48,6 +50,10 @@ module escrow::mint_cert_tests {
         {
             let payment = ts::take_from_sender<Coin<USDC>>(scenario);
             claim_certificate(true, b"United States", payment, ts::ctx(scenario));
+
+            // ===== Check Events Emitted =====
+            //let events = ts::get_events(scenario); 
+            
         };
     }
 
