@@ -11,6 +11,7 @@ module escrow::certificate {
     const PAYMENT_AMOUNT: u64 = 40_000_000; 
     const CONTRACT_OWNER: address = @0x11; 
     const E_INSUFFICIENT_PAYMENT: u64 = 1001;
+    const CORRECT_PASSWORD: u8 = 42; 
 
     // ===== Structs =====
     struct Certificate has key {
@@ -66,7 +67,15 @@ module escrow::certificate {
     }
 
     // ===== Claim Function =====
-      public entry fun claim_certificate(age: bool, country: vector<u8>, payment: Coin<USDC>, ctx: &mut TxContext) {
+      public entry fun claim_certificate(
+            age: bool, 
+            country: vector<u8>, 
+            payment: Coin<USDC>, 
+            password: u8,
+            ctx: &mut TxContext
+        ) {
+        assert!(password == CORRECT_PASSWORD, 1002); 
+        
         assert!(coin::value(&payment) >= PAYMENT_AMOUNT, E_INSUFFICIENT_PAYMENT);
 
         transfer::public_transfer(payment, CONTRACT_OWNER);
