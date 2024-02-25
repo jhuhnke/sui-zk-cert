@@ -1,22 +1,22 @@
-module certificate::Certificate {
+module escrow::certificate {
     use sui::object::{Self, ID, UID}; 
     use sui::tx_context::{Self, TxContext};
+    use sui::coin::{Self, Coin}; 
     use sui::transfer;
     use sui::event; 
     use std::string;
+    use escrow::usdc::USDC; 
 
-    // ===== Replace with contract owner address =====
-    const OWNER: address = @0x11; 
+    // ===== Check Decimals of USDC =====
+    const PAYMENT_AMOUNT: u64 = 40_000_000; 
+    const CONTRACT_OWNER: address = @0x11; 
+    const E_INSUFFICIENT_PAYMENT: u64 = 1001;
 
-    struct Certificate has key, store {
+    // ===== Structs =====
+    struct Certificate has key {
         id: UID, 
         age: bool, 
         country: string::String, 
-    }
-
-    struct LockedCertificate<N> has key {
-        id: UID,
-        inner: N,
     }
 
     struct MintCertificateEvent has copy, drop {
@@ -33,45 +33,53 @@ module certificate::Certificate {
         let ownership = Ownership {
             id: object::new(ctx)
         }; 
-
         transfer::transfer(ownership, tx_context::sender(ctx)); 
     }
 
     // ===== Minting Function =====
-    public fun mint(age: bool, country: vector<u8>, recipient: address, ctx: &mut TxContext) {
+    entry fun mint(age: bool, country: vector<u8>, ctx: &mut TxContext) {
+        let sender = tx_context::sender(ctx); 
+
         let cert = Certificate {
             id: object::new(ctx), 
             age: age, 
             country: string::utf8(country)
         }; 
 
-        let locked_cert = LockedCertificate {
-            id: object::new(ctx),
-            inner: cert,
-        };
-
         event::emit(MintCertificateEvent {
-            object_id: object::uid_to_inner(&locked_cert.id), 
-            creator: recipient
+            object_id: object::uid_to_inner(&cert.id), 
+            creator: sender
         }); 
 
-        // Transfer the locked certificate to the recipient
-        transfer::transfer(locked_cert, recipient);
+        transfer::transfer(cert, sender)
     }
 
-    // ===== Unlocking Function =====
-    public fun unlock_cert(cert: LockedCertificate<Certificate>, ctx: &mut TxContext): Certificate {
-        // Verify contract owner
-        assert!(tx_context::sender(ctx) == OWNER, 403);
-        
-        let LockedCertificate { id, inner } = cert;
-        object::delete(id);
-        inner 
-    }
-
+    // ===== Burn Function =====
     entry fun burn(cert: Certificate) {
         let Certificate { id, age: _, country: _ } = cert; 
         object::delete(id); 
+    }
+
+    // ===== Claim Function =====
+      public entry fun claim_certificate(age: bool, country: vector<u8>, payment: Coin<USDC>, ctx: &mut TxContext) {
+        assert!(coin::value(&payment) >= PAYMENT_AMOUNT, E_INSUFFICIENT_PAYMENT);
+
+        transfer::public_transfer(payment, CONTRACT_OWNER);
+
+        let sender = tx_context::sender(ctx);
+        let cert = Certificate {
+            id: object::new(ctx),
+            age: age,
+            country: string::utf8(country),
+        };
+
+        event::emit(MintCertificateEvent {
+            object_id: object::uid_to_inner(&cert.id),
+            creator: sender,
+        });
+
+        // Transfer the certificate to the sender
+        transfer::transfer(cert, sender);
     }
 
     // ===== Getters =====

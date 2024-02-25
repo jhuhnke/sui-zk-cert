@@ -3,8 +3,8 @@
 //    use sui::object::{Self, UID}; 
 //    use sui::tx_context::{Self, TxContext}; 
 
-//    use certificate::Certificate::{Certificate, MintCertificateEvent}; 
-//    use certificate::Certificate::{mint}; 
+//    use escrow::certificate::{Certificate, MintCertificateEvent}; 
+//    use escrow::certificate::{mint}; 
     
 
     // ===== Public Functions =====

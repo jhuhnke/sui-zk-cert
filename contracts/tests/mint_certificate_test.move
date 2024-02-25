@@ -1,20 +1,20 @@
 #[test_only]
-module certificate::mint_cert_tests {
+module escrow::mint_cert_tests {
     use sui::test_scenario as ts; 
-    use certificate::Certificate::{
-        Certificate, 
-        LockedCertificate
-    };
-    use certificate::Certificate::{
+    use sui::coin::{Self, Coin};
+    use escrow::usdc::USDC; 
+    use escrow::usdc::{mint_usdc};
+    use escrow::certificate::{Certificate};
+    use escrow::certificate::{
         test_init, 
         mint,
         burn, 
-        unlock_cert, 
-        age
+        claim_certificate
     }; 
 
     const OWNER: address = @0x11; 
     const ALICE: address = @0xAA; 
+    const PAYMENT_AMOUNT: u64 = 40_000_000; 
     
     fun init_test(): ts::Scenario {
         let scenario_val = ts::begin(OWNER); 
@@ -26,35 +26,29 @@ module certificate::mint_cert_tests {
     }
 
     // ===== Minting =====
-    fun mint_test(age: bool, country: vector<u8>, scenario: &mut ts::Scenario, by_owner: bool) {
-        let actor = if (by_owner) { OWNER } else { ALICE }; 
-        ts::next_tx(scenario, actor); 
+    fun mint_test(age: bool, country: vector<u8>, scenario: &mut ts::Scenario) {
+        ts::next_tx(scenario, ALICE); 
         {
-            mint(age, country, actor, ts::ctx(scenario)); 
+            mint(age, country, ts::ctx(scenario)); 
         }; 
     }
 
     // ===== Burning =====
-    fun burn_test(scenario: &mut ts::Scenario, by_owner: bool) {
-        let actor = if (by_owner) { OWNER } else { ALICE }; 
-        ts::next_tx(scenario, actor); 
+    fun burn_test(scenario: &mut ts::Scenario) {
+        ts::next_tx(scenario, ALICE); 
         {
-            let cert = ts::take_from_sender<LockedCertificate<Certificate>>(scenario);  
-            let unlocked_cert = unlock_cert(cert, ts::ctx(scenario)); 
-            burn(unlocked_cert); 
+            let cert = ts::take_from_sender<Certificate>(scenario); 
+            burn(cert); 
         }; 
     }
 
-    // ===== Unlocking =====
-    fun unlock_test(scenario: &mut ts::Scenario, by_owner: bool) {
-        let actor = if (by_owner) { OWNER } else { ALICE }; 
-        ts::next_tx(scenario, actor); 
+    // ===== Claiming =====
+    fun claim_test(scenario: &mut ts::Scenario) {
+        ts::next_tx(scenario, ALICE);
         {
-            let locked_cert = ts::take_from_sender<LockedCertificate<Certificate>>(scenario); 
-            let unlocked_cert = unlock_cert(locked_cert, ts::ctx(scenario));
-            assert!(*age(&unlocked_cert) == true, 999); 
-            burn(unlocked_cert);
-        }
+            let payment = ts::take_from_sender<Coin<USDC>>(scenario);
+            claim_certificate(true, b"United States", payment, ts::ctx(scenario));
+        };
     }
 
     // ===== Run Tests =====
@@ -65,12 +59,11 @@ module certificate::mint_cert_tests {
         mint_test(
             true, 
             b"United States", 
-            scenario, 
-            false
+            scenario
         ); 
         ts::end(scenario_val); 
     }
-
+  
     #[test]
     fun test_burn() {
         let scenario_val = init_test(); 
@@ -78,48 +71,17 @@ module certificate::mint_cert_tests {
         mint_test(
             true, 
             b"United States", 
-            scenario, 
-            true
+            scenario
         ); 
-        burn_test(scenario, true); 
+        burn_test(scenario); 
         ts::end(scenario_val); 
     }
 
     #[test]
-    #[expected_failure]
-    fun test_burn_nonowner() {
-        let scenario_val = init_test(); 
-        let scenario = &mut scenario_val; 
-        mint_test(
-            true, 
-            b"United States", 
-            scenario, 
-            false
-        ); 
-        burn_test(scenario, false); 
-        ts::end(scenario_val); 
-    }
-
-    #[test]
-    fun test_unlock_by_owner() {
-        let scenario_val = init_test(); 
-        let scenario = &mut scenario_val; 
-
-        mint_test(true, b"United States", scenario, true); 
-        unlock_test(scenario, true); 
-        
-        ts::end(scenario_val); 
-    }
-
-    #[test]
-    #[expected_failure]
-    fun test_unlock_by_non_owner() {
-        let scenario_val = init_test(); 
-        let scenario = &mut scenario_val; 
-
-        mint_test(true, b"United States", scenario, false); 
-        unlock_test(scenario, false); 
-        
-        ts::end(scenario_val); 
+    fun test_claim() {
+        let scenario_val = init_test();
+        let scenario = &mut scenario_val;
+        claim_test(scenario);
+        ts::end(scenario_val);
     }
 }
