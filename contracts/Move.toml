@@ -1,11 +1,10 @@
 [package]
-name = "contracts"
-version = "0.0.0"
+name = "reppy contracts"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "releases/sui-v0.29.0-release" } 
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "releases/sui-v1.17.0-release" } 
 
 [addresses]
-certificate = "0x0"
-escrow = "0x1"
-usdc = "0x2"
+escrow = "0x0"
+std = "0x1"
+sui = "0x2"
