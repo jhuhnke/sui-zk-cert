@@ -7,7 +7,7 @@ const Home: FC = () => {
     return (
         <div className="container">
           <div className="content">
-            <h1>Your Title Here</h1>
+            <h1>zkRep</h1>
             <p>This is a paragraph below the title. It can contain more detailed information or a brief introduction.</p>
             <Link to='/mint' className="button">Get Credential</Link>
           </div>

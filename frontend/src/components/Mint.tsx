@@ -1,18 +1,55 @@
-import React, { FC, useState } from 'react'; 
-import { Link } from 'react-router-dom'; 
+import React, { FC, useState } from 'react';
+import { TransactionBlock } from '@mysten/sui.js/transactions';  
+import { useWallet, useSuiProvider } from '@suiet/wallet-kit';
+import { toast } from 'react-toastify';
+import { PACKAGE_ID } from '../config/constants'; 
 import '../stylesheets/Mint.css'; 
 
 
 const Mint: FC = () => {
+    const { address, signAndExecuteTransactionBlock } = useWallet(); 
+    
+    if(!address) {
+        alert("Please Connect Your Wallet First"); 
+        return; 
+    }
+
     const[password, setPassword] = useState(''); 
     const [country, setCountry] = useState(''); 
     const [isOver18, setIsOver18] = useState(false); 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); 
+        // ===== Too annoying - throw only after mint is clicked =====
+        //if(userAddress == undefined) {
+        //    toast('Wallet is not connected', {autoClose: 2000, type: 'error', position:'bottom-right'});
+        //    return;
+        //}
         alert(`Form submitted:\nPassword: ${password}\nCountry: ${country}\nOver 18: ${isOver18}`);
 
         // ===== Handle submission / PTB here =====
+        const txb = new TransactionBlock(); 
+
+        // ===== 1000 MIST Transfer for Testing =====
+        const [coin] = txb.splitCoins(txb.gas, [txb.pure(1000)]); 
+
+        // ===== Change the wallet address here to be protocol controlled wallet before mainnet launch =====
+        txb.transferObjects([coin], txb.pure("0x8e0a2135568a5ff202aa0b78a7f3113fc8b68b65d4b5143261f723cc445d9809")); 
+        txb.moveCall({
+            target: `${PACKAGE_ID}::certificate::claim_certificate`, 
+            arguments: [
+                txb.pure(isOver18), 
+                txb.pure(country),  
+                txb.pure(password)
+            ],
+        }); 
+
+        const result = signAndExecuteTransactionBlock({
+            transactionBlock: txb, 
+        }).catch(e => {console.log(e)}); 
+
+        const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
+        console.log(url); 
     };
 
     return (
