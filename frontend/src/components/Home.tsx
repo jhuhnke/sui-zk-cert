@@ -7,9 +7,9 @@ const Home: FC = () => {
     return (
         <div className="container">
           <div className="content">
-            <h1>zkRep</h1>
-            <p>This is a paragraph below the title. It can contain more detailed information or a brief introduction.</p>
-            <Link to='/mint' className="button">Get Credential</Link>
+            <h1>The SUI zk-Identity Layer</h1>
+            <p>zkRep leverages the power of zero-knowledge proofs to enable secure, self-sovereign, and private credential verifications.</p>
+            <Link to='/mint' className="button">Identity Credential</Link>
           </div>
         </div>
     );

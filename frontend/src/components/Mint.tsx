@@ -48,7 +48,7 @@ const Mint: FC = () => {
             transactionBlock: txb, 
         }).catch(e => {console.log(e)}); 
 
-        const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
+        const url = `https://suiexplorer.com/txblock/${result}?network=testnet`;
         console.log(url); 
     };
 

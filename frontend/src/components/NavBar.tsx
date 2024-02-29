@@ -13,7 +13,9 @@ const NavBar: FC = () => {
             <ul className="nav-links">
                 <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>
                 <li className="nav-item"><Link to="/about" className="nav-link">About</Link></li>
+                <li className="nav-item"><Link to="/use-cases" className='nav-link'>Use Cases</Link></li>
                 <li className="nav-item"><Link to="/contact" className="nav-link">Contact</Link></li>
+                <li className="nav-item">Documentation</li>
             </ul>
             <ConnectButton className="sui-button" onConnectError={(e) => console.log(e)}>Connect Wallet</ConnectButton>
         </nav>

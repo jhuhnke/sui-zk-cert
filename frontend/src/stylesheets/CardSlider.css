@@ -1,0 +1,54 @@
+.card-slider {
+    position: relative;
+    width: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.card-slider::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: nowrap;
+    transition: transform 0.5s ease-in-out;
+    scroll-padding-left: calc(50% - (20% + 5%)); /* Center the first card */
+    scroll-snap-type: x mandatory;
+}
+
+.card {
+    flex: 0 0 calc(40% - 10px);
+    height: 33vh; /* Adjust size to show 2.5 cards */
+    margin-right: 10px; /* Space between cards */
+    scroll-snap-align: start; /* Snap align the cards */
+}
+
+.card.even {
+    background-color: #4DA2FF;
+}
+
+.card.odd {
+    background-color: #C0E6FF;
+}
+
+.slide-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.slide-arrow.left {
+    left: 10px;
+}
+
+.slide-arrow.right {
+    right: 10px;
+}

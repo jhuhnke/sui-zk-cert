@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 70vh; 
+    height: calc(100vh - 64px); 
     font-family: 'Roboto', sans-serif;
   }
   

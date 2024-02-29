@@ -1,0 +1,31 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white; 
+    color: black;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-left a, .footer-right a {
+    color: black;
+    margin-right: 15px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-left a:hover, .footer-right a:hover {
+    color: #007bff; 
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Icon size adjustment, if needed */
+.fa-twitter, .fa-github, .fa-linkedin {
+    font-size: 24px;
+}
