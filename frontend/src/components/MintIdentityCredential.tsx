@@ -36,7 +36,7 @@ const MintIdentityCredential: FC = () => {
         // ===== Change the wallet address here to be protocol controlled wallet before mainnet launch =====
         txb.transferObjects([coin], txb.pure("0x8e0a2135568a5ff202aa0b78a7f3113fc8b68b65d4b5143261f723cc445d9809")); 
         txb.moveCall({
-            target: `${PACKAGE_ID}::certificate::claim_certificate`, 
+            target: `${PACKAGE_ID}::identity_certificate::claim_certificate`, 
             arguments: [
                 txb.pure(isOver18), 
                 txb.pure(country),  

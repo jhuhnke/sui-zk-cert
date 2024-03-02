@@ -1,20 +1,43 @@
-import React, { FC, useState, useEffect } from 'react'; 
-import { supabase } from '../supabaseClient'; 
-import { useHistory } from 'react-router-dom'; 
-import { Auth } from '@supabase/auth-ui-react'; 
+import React, { FC, useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
+import { useHistory } from 'react-router-dom';
+import '../stylesheets/MintSocialCredentialSignedIn.css';
+import { TransactionBlock } from '@mysten/sui.js/transactions';  
+import { useWallet } from '@suiet/wallet-kit';
+import { PACKAGE_ID } from '../config/constants'; 
+
+interface User {
+  app_metadata: {
+    provider: string;
+  };
+  user_metadata: {
+    full_name?: string;
+    preferred_username?: string;
+    avatar_url?: string;
+  };
+  identities?: Array<{
+    id: string;
+  }>;
+}
 
 const MintSocialCredentialSignedIn: FC = () => {
+    const { address, signAndExecuteTransactionBlock } = useWallet(); 
     const history = useHistory(); 
-    const [user, setUser] = useState({}); 
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         async function getUserData() {
-            await supabase.auth.getUser().then((value) => {
-                if(value.data?.user) {
-                    console.log(value.data.user);
-                    setUser(value.data.user); 
-                }
-            })
+            const { data: { user }, error } = await supabase.auth.getUser();
+
+            if (error) {
+                console.error('Error fetching user:', error.message);
+                return;
+            }
+
+            if (user) {
+                console.log(user);
+                setUser(user);
+            }
         }
         getUserData();
     }, []); 
@@ -26,27 +49,81 @@ const MintSocialCredentialSignedIn: FC = () => {
         }
     }
 
+    const displayUsername = () => {
+        const provider = user?.app_metadata.provider;
+        if (provider === 'discord') {
+            return user?.user_metadata.full_name || 'Unknown';
+        } else if (provider === 'github') {
+            return user?.user_metadata.preferred_username || 'Unknown';
+        }
+        return 'Unknown';
+    };
+
+    const userIdentityId = () => {
+        return user?.identities?.[0]?.id || 'Unknown ID';
+    };
+
+    const getAvatarUrl = () => {
+        return user?.user_metadata.avatar_url || 'https://ipfs.io/ipns/k51qzi5uqu5dkeq8e8ixhyw1yrro0wfc5qo1xjsnlbbe5ztsvhz0mkb08qymjq'; 
+    };
+
     const handleMint = () => {
-        if (!twitterHandle && !discordUsername) {
-            alert('Please sign in to at least one account.');
+        if (!address) {
+            alert("Please Connect Your Wallet First");
             return;
         }
-        alert(`Twitter Handle: ${twitterHandle || 'null'}\nDiscord Username: ${discordUsername || 'null'}`);
-        // Here you would handle the minting process
-    };
+        
+        // ===== Grabs User Info =====
+        const platform = user?.app_metadata.provider.toUpperCase() || 'Unknown Platform';
+        const username = displayUsername(); 
+        const userId = userIdentityId(); 
+        const image = getAvatarUrl(); 
+
+        // ===== Handle submission / PTB =====
+        const txb = new TransactionBlock(); 
+
+        // ===== 1000 MIST Transfer for Testing =====
+        const [coin] = txb.splitCoins(txb.gas, [txb.pure(1000)]); 
+
+        // ===== Need to change wallet here in future =====
+        txb.transferObjects([coin], txb.pure("0x8e0a2135568a5ff202aa0b78a7f3113fc8b68b65d4b5143261f723cc445d9809")); 
+        txb.moveCall({
+            target: `${PACKAGE_ID}::social_certificate::mint`, 
+            arguments: [
+                txb.pure(platform), 
+                txb.pure(username),  
+                txb.pure(userId), 
+                txb.pure(image),
+            ],
+        }); 
+
+        const result = signAndExecuteTransactionBlock({
+            transactionBlock: txb, 
+        }).catch(e => {console.log(e)}); 
+
+        const url = `https://suiexplorer.com/txblock/${result}?network=testnet`;
+        console.log(url); 
+        
+        //alert(`Minting credential\nPlatform: ${platform}\nUsername: ${username}\nUser ID: ${userId}`);
+    }; 
 
     return (
         <div className="mint-container">
-            <div className="social-buttons-container">
-                
-                <h1>Success</h1>
-                <button onClick={() => signOutUser()}>Sign Out</button>
+            <h1>Logged In Success</h1>
+            <div>
+                <p>Logged in with: {user?.app_metadata.provider.toUpperCase()}</p>
+                <p>Username: {user?.user_metadata.full_name || user?.user_metadata.preferred_username || 'Unknown'}</p>
+                <p>User ID: {user?.identities?.[0]?.id || 'Unknown ID'}</p>
+                {user?.user_metadata.avatar_url && (
+                    <img src={user.user_metadata.avatar_url} alt="Profile" style={{ height: 100 }} />
+                )}
             </div>
-            <button onClick={handleMint} className="mint-button">Mint</button>
+            <div className="button-container">
+                <button onClick={handleMint} className="mint-button">Mint Credential</button>
+                <button onClick={signOutUser} className="sign-out-button">Sign Out</button>
+            </div>
         </div>
     );
-}
+};
 
-export default MintSocialCredentialSignedIn; 
-
-// { Object.keys(user) !== 0 ? }
+export default MintSocialCredentialSignedIn;

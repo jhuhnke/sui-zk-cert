@@ -10,8 +10,9 @@ module escrow::social_certificate {
     // ===== Structs =====
     struct Certificate has key {
         id: UID, 
-        twitter: string::String, 
-        discord: string::String, 
+        platform: string::String,
+        username: string::String, 
+        platform_id: string::String, 
         image_url: string::String, 
     }
 
@@ -33,13 +34,14 @@ module escrow::social_certificate {
     }
 
     // ===== Minting Function =====
-    entry fun mint(twitter: vector<u8>, discord: vector<u8>, image_url: vector<u8>, ctx: &mut TxContext ) {
+    entry fun mint(platform: vector<u8>, username: vector<u8>, platform_id: vector<u8>, image_url: vector<u8>, ctx: &mut TxContext ) {
         let sender = tx_context::sender(ctx); 
 
         let cert = Certificate {
             id: object::new(ctx), 
-            twitter: string::utf8(twitter), 
-            discord: string::utf8(discord), 
+            platform: string::utf8(platform), 
+            username: string::utf8(username),
+            platform_id: string::utf8(platform_id),  
             image_url: string::utf8(image_url), 
         }; 
 
@@ -53,14 +55,15 @@ module escrow::social_certificate {
 
     // ===== Burn Function =====
     entry fun burn(cert: Certificate) {
-        let Certificate{ id, twitter: _, discord: _, image_url: _, } = cert; 
+        let Certificate{ id, platform: _, username: _, platform_id: _, image_url: _, } = cert; 
         object::delete(id); 
     }
 
     // ===== Claim Function =====
     public entry fun claim_certificate(
-        twitter: vector<u8>, 
-        discord: vector<u8>, 
+        platform: vector<u8>, 
+        username: vector<u8>,
+        platform_id: vector<u8>,  
         password: u8, 
         image_url: vector<u8>, 
         ctx: &mut TxContext
@@ -69,9 +72,10 @@ module escrow::social_certificate {
 
         let sender = tx_context::sender(ctx); 
         let cert = Certificate {
-            id: object::new(ctx), 
-            twitter: string::utf8(twitter), 
-            discord: string::utf8(discord), 
+            id: object::new(ctx),
+            platform: string::utf8(platform),  
+            username: string::utf8(username), 
+            platform_id: string::utf8(platform_id), 
             image_url: string::utf8(image_url), 
         }; 
 
@@ -84,12 +88,16 @@ module escrow::social_certificate {
     }
 
     // ===== Getters =====
-    public fun twitter(cert: &Certificate): &string::String {
-        &cert.twitter
+    public fun platform(cert: &Certificate): &string::String {
+        &cert.platform
     }
 
-    public fun discord(cert: &Certificate): &string::String {
-        &cert.discord
+    public fun username(cert: &Certificate): &string::String {
+        &cert.username
+    }
+
+    public fun platform_id(cert: &Certificate): &string::String {
+        &cert.platform_id
     }
 
     public fun image_url(cert: &Certificate): &string::String {
