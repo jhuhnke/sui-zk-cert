@@ -3,16 +3,11 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { useWallet, useSuiProvider } from '@suiet/wallet-kit';
 import { toast } from 'react-toastify';
 import { PACKAGE_ID } from '../config/constants'; 
-import '../stylesheets/Mint.css'; 
+import '../stylesheets/MintIdentityCredential.css'; 
 
 
-const Mint: FC = () => {
+const MintIdentityCredential: FC = () => {
     const { address, signAndExecuteTransactionBlock } = useWallet(); 
-    
-    if(!address) {
-        alert("Please Connect Your Wallet First"); 
-        return; 
-    }
 
     const[password, setPassword] = useState(''); 
     const [country, setCountry] = useState(''); 
@@ -25,7 +20,12 @@ const Mint: FC = () => {
         //    toast('Wallet is not connected', {autoClose: 2000, type: 'error', position:'bottom-right'});
         //    return;
         //}
-        alert(`Form submitted:\nPassword: ${password}\nCountry: ${country}\nOver 18: ${isOver18}`);
+        if(!address) {
+            alert("Please Connect Your Wallet First"); 
+            return; 
+        }
+
+        //alert(`Form submitted:\nPassword: ${password}\nCountry: ${country}\nOver 18: ${isOver18}`);
 
         // ===== Handle submission / PTB here =====
         const txb = new TransactionBlock(); 
@@ -36,7 +36,7 @@ const Mint: FC = () => {
         // ===== Change the wallet address here to be protocol controlled wallet before mainnet launch =====
         txb.transferObjects([coin], txb.pure("0x8e0a2135568a5ff202aa0b78a7f3113fc8b68b65d4b5143261f723cc445d9809")); 
         txb.moveCall({
-            target: `${PACKAGE_ID}::certificate::claim_certificate`, 
+            target: `${PACKAGE_ID}::identity_certificate::claim_certificate`, 
             arguments: [
                 txb.pure(isOver18), 
                 txb.pure(country),  
@@ -91,4 +91,4 @@ const Mint: FC = () => {
     );
 };
 
-export default Mint 
+export default MintIdentityCredential 

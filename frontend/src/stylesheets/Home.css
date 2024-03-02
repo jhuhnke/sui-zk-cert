@@ -15,6 +15,7 @@
   .button {
     display: inline-block; /* Ensures padding and other block-level styles are applied */
     padding: 10px 15px;
+    margin: 0px 20px 0px 20px; 
     background-color: white;
     color: #007bff;
     border: 2px solid #007bff;

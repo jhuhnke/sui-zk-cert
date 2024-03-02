@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'; 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'; 
 import Home from './components/Home'; 
-import Mint from './components/Mint';
 import Uses from './components/Uses'; 
 import About from './components/About';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar'; 
-import Credential from './components/Credential'; 
+import SocialCredential from './components/SocialCredential';
+import IdentityCredential from './components/IdentityCredential'; 
+import MintSocialCredential from './components/MintSocialCredential';
+import MintIdentityCredential from './components/MintIdentityCredential';
+import MintSocialCredentialSignedIn from './components/MintSocialCredentialSignedIn'; 
 import { WalletProvider } from '@suiet/wallet-kit'; 
 
 const App = () => {
@@ -18,11 +21,20 @@ const App = () => {
                     <Route exact path='/'>
                         <Home />
                     </Route>
-                    <Route exact path='/mint'>
-                        <Mint />
+                    <Route exact path='/mint-id'>
+                        <MintIdentityCredential />
                     </Route>
-                    <Route exact path='/credential'>
-                        <Credential />
+                    <Route exact path='/id-credential'>
+                        <IdentityCredential />
+                    </Route>
+                    <Route exact path='/mint-social'>
+                        <MintSocialCredential />
+                    </Route>
+                    <Route exact path='/mint-social-signed-in'>
+                        <MintSocialCredentialSignedIn />
+                    </Route>
+                    <Route exact path='/social-credential'>
+                        <SocialCredential />
                     </Route>
                     <Route exact path='/about'>
                         <About />

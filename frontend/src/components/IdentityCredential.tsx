@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-const Credential: FC = () => {
+const IdentityCredential: FC = () => {
     return (
         <div>
             <h1>Credential!</h1>
@@ -8,4 +8,4 @@ const Credential: FC = () => {
     ); 
 }; 
 
-export default Credential;
+export default IdentityCredential;
