@@ -1,0 +1,17 @@
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.success-container h1 {
+    margin-bottom: 20px;
+}
+
+.success-container button {
+    padding: 10px 20px;
+    cursor: pointer;
+}

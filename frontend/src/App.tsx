@@ -5,6 +5,7 @@ import Uses from './components/Uses';
 import About from './components/About';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar'; 
+import SuccessPage from './components/SuccessPage';
 import SocialCredential from './components/SocialCredential';
 import IdentityCredential from './components/IdentityCredential'; 
 import MintSocialCredential from './components/MintSocialCredential';
@@ -41,6 +42,9 @@ const App = () => {
                     </Route>
                     <Route exact path = '/use-cases'>
                         <Uses />
+                    </Route>
+                    <Route exact path = '/success'>
+                        <SuccessPage />
                     </Route>
                     <Redirect to="/"></Redirect>
                 </Switch>
