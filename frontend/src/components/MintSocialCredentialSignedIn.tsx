@@ -67,7 +67,7 @@ const MintSocialCredentialSignedIn: FC = () => {
         return user?.user_metadata.avatar_url || 'https://ipfs.io/ipns/k51qzi5uqu5dkeq8e8ixhyw1yrro0wfc5qo1xjsnlbbe5ztsvhz0mkb08qymjq'; 
     };
 
-    const handleMint = () => {
+    const handleMint = async () => {
         if (!address) {
             alert("Please Connect Your Wallet First");
             return;
@@ -85,6 +85,8 @@ const MintSocialCredentialSignedIn: FC = () => {
         // ===== 1000 MIST Transfer for Testing =====
         const [coin] = txb.splitCoins(txb.gas, [txb.pure(1000)]); 
 
+        const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
         // ===== Need to change wallet here in future =====
         txb.transferObjects([coin], txb.pure("0x8e0a2135568a5ff202aa0b78a7f3113fc8b68b65d4b5143261f723cc445d9809")); 
         txb.moveCall({
@@ -97,12 +99,30 @@ const MintSocialCredentialSignedIn: FC = () => {
             ],
         }); 
 
-        const result = signAndExecuteTransactionBlock({
-            transactionBlock: txb, 
-        }).catch(e => {console.log(e)}); 
+        try {
+            const result = await signAndExecuteTransactionBlock({
+                transactionBlock: txb,
+            });
 
-        const url = `https://suiexplorer.com/txblock/${result}?network=testnet`;
-        console.log(url); 
+            await wait(5000);
+    
+            if (result) {
+                const txId = result.digest; // Using the digest as the transaction ID
+                const url = `https://suiexplorer.com/txblock/${txId}?network=testnet`;
+                console.log(url);
+    
+                // Redirecting only after the transaction is successfully submitted
+                history.push({
+                    pathname: '/success',
+                    state: { url }
+                });
+            } else {
+                // Handle cases where the transaction result might not be as expected
+                console.error('Transaction failed or result is unexpected:', result);
+            }
+        } catch (e) {
+            console.error('Error submitting transaction:', e);
+        }
         
         //alert(`Minting credential\nPlatform: ${platform}\nUsername: ${username}\nUser ID: ${userId}`);
     }; 
