@@ -14,7 +14,7 @@ const MintIdentityCredential: FC = () => {
     const [country, setCountry] = useState(''); 
     const [isOver18, setIsOver18] = useState(false); 
 
-    const image_url = 'https://ipfs.io/ipns/k51qzi5uqu5dkeq8e8ixhyw1yrro0wfc5qo1xjsnlbbe5ztsvhz0mkb08qymjq'; 
+    const image_url = 'ipfs://bafkreihaxb7pe54psv6hqvhlinhzkc67yhyi4cygqrngiaceqi3xrfbgda'; 
 
     const history = useHistory(); 
 
