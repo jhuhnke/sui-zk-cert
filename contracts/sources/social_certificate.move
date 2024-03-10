@@ -40,7 +40,7 @@ module escrow::social_certificate {
 
         let values = vector[
             string::utf8(b"{image_url}"),
-            string::utf8(b"This certificate verifies your residency and age on-chain."), 
+            string::utf8(b"This certificate verifies your ownership of a social media handle."), 
             string::utf8(b"zkrep.xyz")
         ]; 
 
