@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'; 
+import { WalletProvider } from '@suiet/wallet-kit'; 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'; 
 import Home from './components/Home'; 
 import Uses from './components/Uses'; 
 import About from './components/About';
 import Footer from './components/Footer';
-import NavBar from './components/NavBar'; 
+import NavBar from './components/NavBar';
+import Contact from './components/Contact';  
 import SuccessPage from './components/SuccessPage';
 import SocialCredential from './components/SocialCredential';
 import IdentityCredential from './components/IdentityCredential'; 
 import MintSocialCredential from './components/MintSocialCredential';
 import MintIdentityCredential from './components/MintIdentityCredential';
 import MintSocialCredentialSignedIn from './components/MintSocialCredentialSignedIn'; 
-import { WalletProvider } from '@suiet/wallet-kit'; 
+import './stylesheets/App.css'; 
 
 const App = () => {
     return (
@@ -45,6 +47,9 @@ const App = () => {
                     </Route>
                     <Route exact path = '/success'>
                         <SuccessPage />
+                    </Route>
+                    <Route exact path = '/contact'>
+                        <Contact />
                     </Route>
                     <Redirect to="/"></Redirect>
                 </Switch>

@@ -1,24 +1,29 @@
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     height: 64px;
-    background-color: white; /* Background color changed to white */
-    color: black; /* Text color changed to black */
+    background-color: white; 
+    color: black; 
     padding: 0 20px;
-    font-family: 'Roboto', sans-serif; /* Set font to Roboto */
+    font-family: 'Roboto', sans-serif; 
   }
   
   .logo {
     display: flex;
     align-items: center;
   }
+
+  .logo, .sui-button {
+    flex: 0 0 
+  }
   
   .logo img {
-    margin-right: 10px; /* Add spacing between logo and company name */
+    margin-right: 10px; 
   }
   
   .nav-links {
+    flex: 1 0 auto; 
     display: flex;
     justify-content: center;
     list-style-type: none;

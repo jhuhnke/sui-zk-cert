@@ -4,6 +4,8 @@ import { useWallet, useSuiProvider } from '@suiet/wallet-kit';
 import { toast } from 'react-toastify';
 import { PACKAGE_ID } from '../config/constants'; 
 import { useHistory } from 'react-router-dom'; 
+import Tesseract from 'tesseract.js'; 
+import { COUNTRIES } from '../config/countries'; 
 import '../stylesheets/MintIdentityCredential.css'; 
 
 
@@ -13,10 +15,111 @@ const MintIdentityCredential: FC = () => {
     const[password, setPassword] = useState(''); 
     const [country, setCountry] = useState(''); 
     const [isOver18, setIsOver18] = useState(false); 
+    const [isDocumentProcessed, setIsDocumentProcessed] = useState(false); 
 
-    const image_url = 'https://ipfs.io/ipns/k51qzi5uqu5dkeq8e8ixhyw1yrro0wfc5qo1xjsnlbbe5ztsvhz0mkb08qymjq'; 
+    const image_url = 'ipfs://bafkreihaxb7pe54psv6hqvhlinhzkc67yhyi4cygqrngiaceqi3xrfbgda'; 
 
     const history = useHistory(); 
+
+    function checkIfOver18(birthDate) {
+        const today = new Date();
+        const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        return birthDate <= eighteenYearsAgo;
+    }
+
+    const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const allowedTypes = ['image/jpeg', 'image/png'];
+
+            if (!allowedTypes.includes(file.type)) {
+                alert("Please upload an image of type .jpg or .png");
+                return;
+            }
+
+            const img = new Image();
+            img.onload = async () => {
+                // Original image dimensions
+                const origWidth = img.width;
+                const origHeight = img.height;
+
+                // Scale factor (500%)
+                const scaleFactor = 5;
+
+                // Scaled dimensions
+                const scaledWidth = origWidth * scaleFactor;
+                const scaledHeight = origHeight * scaleFactor;
+
+                // Create a canvas and scale the image
+                const canvas = document.createElement('canvas');
+                canvas.width = scaledWidth;
+                canvas.height = scaledHeight;
+
+                const ctx = canvas.getContext('2d');
+
+                // Ensure context and canvas are valid
+                if (!ctx) {
+                    console.error('Unable to get canvas context');
+                    return;
+                }
+
+                // Draw the scaled image
+                ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+
+                // Perform OCR on the scaled image
+                Tesseract.recognize(
+                    canvas,
+                    'eng',
+                    { logger: m => console.log(m) }
+                ).then(({ data: { text } }) => {
+                    console.log(text);
+    
+                    // Extracting the country code and birthdate from the last line
+                    const lines = text.split('\n').filter(line => line.trim() !== '');
+                    const lastLine = lines[lines.length - 1];
+    
+                    const countryCodeAndBirthdatePattern = /([A-Z]{3})(\d{6})/;
+                    const match = lastLine.match(countryCodeAndBirthdatePattern);
+    
+                    if (match) {
+                        const [, countryCode, birthdate] = match;
+    
+                        // Parsing birthdate and checking if over 18
+                        const year = parseInt(birthdate.slice(0, 2), 10);
+                        const month = parseInt(birthdate.slice(2, 4), 10) - 1; // JavaScript months are 0-indexed
+                        const day = parseInt(birthdate.slice(4, 6), 10);
+    
+                        // Determine the century
+                        const currentYear = new Date().getFullYear();
+                        const century = year <= currentYear % 100 ? 2000 : 1900;
+                        const fullYear = century + year;
+    
+                        const birthdateObj = new Date(fullYear, month, day);
+                        const isOver18 = checkIfOver18(birthdateObj);
+                        setIsOver18(isOver18);
+    
+                        // Updating country state
+                        if (COUNTRIES[countryCode]) {
+                            const countryName = COUNTRIES[countryCode];
+                            setCountry(countryName);
+                            console.log(`Country found: ${countryName} (${countryCode})`);
+                            console.log(`Birthdate: ${birthdateObj.toISOString().split('T')[0]}, Over 18: ${isOver18}`);
+                        } else {
+                            console.log("Country code not found in predefined list.");
+                        }
+                    } else {
+                        console.log("No valid country code and birthdate found in the text.");
+                    }
+                    // ===== Enables the mint button =====
+                    setIsDocumentProcessed(true); 
+                }).catch(error => {
+                    console.error('OCR processing failed', error);
+                });
+            };
+
+            img.src = URL.createObjectURL(file);
+        }
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); 
@@ -30,7 +133,7 @@ const MintIdentityCredential: FC = () => {
             return; 
         }
 
-        //alert(`Form submitted:\nPassword: ${password}\nCountry: ${country}\nOver 18: ${isOver18}`);
+        alert(`Form submitted:\nPassword: ${password}\nCountry: ${country}\nOver 18: ${isOver18}`);
 
         // ===== Handle submission / PTB here =====
         const txb = new TransactionBlock(); 
@@ -79,7 +182,7 @@ const MintIdentityCredential: FC = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>Mint Credential</h1>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -92,26 +195,14 @@ const MintIdentityCredential: FC = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="country">Country:</label>
-                    <select id="country" value={country} onChange={e => setCountry(e.target.value)}>
-                        <option value="">Select a country</option>
-                        {/* Add options for countries as needed */}
-                        <option value="USA">USA</option>
-                        <option value="Canada">Canada</option>
-                        <option value="UK">UK</option>
-                    </select>
+                    <label htmlFor="documentUpload">Upload Document:</label>
+                    <input
+                        type="file"
+                        id="documentUpload"
+                        onChange={handleDocumentUpload}
+                    />
                 </div>
-                <div>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={isOver18}
-                            onChange={e => setIsOver18(e.target.checked)}
-                        />
-                        I am over 18 years old
-                    </label>
-                </div>
-                <button type="submit">Mint Credential</button>
+                <button type="submit" disabled={!isDocumentProcessed}>Mint Credential</button>
             </form>
         </div>
     );

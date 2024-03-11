@@ -64,7 +64,7 @@ const MintSocialCredentialSignedIn: FC = () => {
     };
 
     const getAvatarUrl = () => {
-        return user?.user_metadata.avatar_url || 'https://ipfs.io/ipns/k51qzi5uqu5dkeq8e8ixhyw1yrro0wfc5qo1xjsnlbbe5ztsvhz0mkb08qymjq'; 
+        return 'ipfs://bafkreihaxb7pe54psv6hqvhlinhzkc67yhyi4cygqrngiaceqi3xrfbgda'; 
     };
 
     const handleMint = async () => {

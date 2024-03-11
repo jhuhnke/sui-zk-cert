@@ -20,10 +20,17 @@
 }
 
 .card {
-    flex: 0 0 calc(40% - 10px);
-    height: 33vh; /* Adjust size to show 2.5 cards */
-    margin-right: 10px; /* Space between cards */
-    scroll-snap-align: start; /* Snap align the cards */
+    flex: 0 0 calc(35% - 10px);
+    height: 33vh; 
+    margin-right: 10px; 
+    scroll-snap-align: start; 
+    border-radius: 15px; 
+    background-color: #4DA2FF; 
+    padding: 20px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card.even {
@@ -52,3 +59,4 @@
 .slide-arrow.right {
     right: 10px;
 }
+

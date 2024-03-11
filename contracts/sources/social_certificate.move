@@ -1,8 +1,10 @@
 module escrow::social_certificate {
     use sui::object::{Self, ID, UID}; 
-    use sui::tx_context::{Self, TxContext}; 
+    use sui::tx_context::{Self, TxContext, sender}; 
     use sui::transfer; 
     use sui::event; 
+    use sui::package; 
+    use sui::display; 
     use std::string; 
 
     const CORRECT_PASSWORD: u8 = 42; 
@@ -25,11 +27,38 @@ module escrow::social_certificate {
         id: UID
     }
 
+    // ===== OTW =====
+    struct SOCIAL_CERTIFICATE has drop {}
+
     // ===== Initializer =====
-    fun init(ctx: &mut TxContext) {
+    fun init(otw: SOCIAL_CERTIFICATE, ctx: &mut TxContext) {
+        let keys = vector[
+            string::utf8(b"image_url"),
+            string::utf8(b"description"), 
+            string::utf8(b"project_url"), 
+        ]; 
+
+        let values = vector[
+            string::utf8(b"{image_url}"),
+            string::utf8(b"This certificate verifies your ownership of a social media handle."), 
+            string::utf8(b"zkrep.xyz")
+        ]; 
+
+        let publisher = package::claim(otw, ctx); 
+
+        let display = display::new_with_fields<Certificate>(
+            &publisher, keys, values, ctx
+        ); 
+        
         let ownership = Ownership {
             id: object::new(ctx)
         }; 
+
+        display::update_version(&mut display); 
+
+        transfer::public_transfer(publisher, sender(ctx)); 
+        transfer::public_transfer(display, sender(ctx)); 
+        
         transfer::transfer(ownership, tx_context::sender(ctx)); 
     }
 
