@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 import '../stylesheets/MintSocialCredentialSignedIn.css';
 import { TransactionBlock } from '@mysten/sui.js/transactions';  
 import { useWallet } from '@suiet/wallet-kit';
+import Footer from './Footer';
+import NavBar from './NavBar';
 import { PACKAGE_ID } from '../config/constants'; 
 
 interface User {
@@ -128,20 +130,24 @@ const MintSocialCredentialSignedIn: FC = () => {
     }; 
 
     return (
-        <div className="mint-container">
-            <h1>Logged In Success</h1>
-            <div>
-                <p>Logged in with: {user?.app_metadata.provider.toUpperCase()}</p>
-                <p>Username: {user?.user_metadata.full_name || user?.user_metadata.preferred_username || 'Unknown'}</p>
-                <p>User ID: {user?.identities?.[0]?.id || 'Unknown ID'}</p>
-                {user?.user_metadata.avatar_url && (
-                    <img src={user.user_metadata.avatar_url} alt="Profile" style={{ height: 100 }} />
-                )}
+        <div className='signed-in-wrapper'>
+            <NavBar />
+            <div className="mint-container">
+                <h1>Logged In Success</h1>
+                <div>
+                    <p>Logged in with: {user?.app_metadata.provider.toUpperCase()}</p>
+                    <p>Username: {user?.user_metadata.full_name || user?.user_metadata.preferred_username || 'Unknown'}</p>
+                    <p>User ID: {user?.identities?.[0]?.id || 'Unknown ID'}</p>
+                    {user?.user_metadata.avatar_url && (
+                        <img src={user.user_metadata.avatar_url} alt="Profile" style={{ height: 100 }} />
+                    )}
+                </div>
+                <div className="button-container">
+                    <button onClick={handleMint} className="mint-button">Mint Credential</button>
+                    <button onClick={signOutUser} className="sign-out-button">Sign Out</button>
+                </div>
             </div>
-            <div className="button-container">
-                <button onClick={handleMint} className="mint-button">Mint Credential</button>
-                <button onClick={signOutUser} className="sign-out-button">Sign Out</button>
-            </div>
+            <Footer />
         </div>
     );
 };

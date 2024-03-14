@@ -6,6 +6,8 @@ import { PACKAGE_ID } from '../config/constants';
 import { useHistory } from 'react-router-dom'; 
 import Tesseract from 'tesseract.js'; 
 import { COUNTRIES } from '../config/countries'; 
+import Footer from './Footer';
+import NavBar from './NavBar';
 import '../stylesheets/MintIdentityCredential.css'; 
 
 
@@ -182,28 +184,32 @@ const MintIdentityCredential: FC = () => {
     };
 
     return (
-        <div className="container">
-            <h1>Mint Credential</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="documentUpload">Upload Document:</label>
-                    <input
-                        type="file"
-                        id="documentUpload"
-                        onChange={handleDocumentUpload}
-                    />
-                </div>
-                <button type="submit" disabled={!isDocumentProcessed}>Mint Credential</button>
-            </form>
+        <div className='mint-id-wrapper'>
+            <NavBar />
+            <div className="container">
+                <h1>Mint Credential</h1>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="documentUpload">Upload Document:</label>
+                        <input
+                            type="file"
+                            id="documentUpload"
+                            onChange={handleDocumentUpload}
+                        />
+                    </div>
+                    <button type="submit" disabled={!isDocumentProcessed}>Mint Credential</button>
+                </form>
+            </div>
+            <Footer />
         </div>
     );
 };

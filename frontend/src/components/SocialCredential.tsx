@@ -1,9 +1,15 @@
 import { FC } from 'react'; 
+import Footer from './Footer';
+import NavBar from './NavBar';
 
 const SocialCredential: FC = () => {
     return (
-        <div>
-            <h1>Credential!</h1>
+        <div className='cred-wrapper'>
+            <NavBar />
+            <div>
+                <h1>Credential!</h1>
+            </div>
+            <Footer />
         </div>
     ); 
 }; 

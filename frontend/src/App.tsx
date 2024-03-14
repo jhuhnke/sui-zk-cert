@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react'; 
 import { WalletProvider } from '@suiet/wallet-kit'; 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'; 
 import Home from './components/Home'; 
 import Uses from './components/Uses'; 
 import About from './components/About';
-import Footer from './components/Footer';
-import NavBar from './components/NavBar';
 import Contact from './components/Contact';  
 import SuccessPage from './components/SuccessPage';
 import SocialCredential from './components/SocialCredential';
@@ -19,7 +16,6 @@ const App = () => {
     return (
         <WalletProvider>
             <Router>
-                <NavBar />
                 <Switch>
                     <Route exact path='/'>
                         <Home />
@@ -53,7 +49,6 @@ const App = () => {
                     </Route>
                     <Redirect to="/"></Redirect>
                 </Switch>
-                <Footer />
             </Router>
         </WalletProvider>
     ); 
