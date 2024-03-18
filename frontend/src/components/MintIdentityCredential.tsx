@@ -187,27 +187,37 @@ const MintIdentityCredential: FC = () => {
         <div className='mint-id-wrapper'>
             <NavBar />
             <div className="container">
-                <h1>Mint Credential</h1>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="documentUpload">Upload Document:</label>
-                        <input
-                            type="file"
-                            id="documentUpload"
-                            onChange={handleDocumentUpload}
-                        />
-                    </div>
-                    <button type="submit" disabled={!isDocumentProcessed}>Mint Credential</button>
-                </form>
+                <div className='form-card'>
+                    <h1>Mint Identity Credential</h1>
+                    <form onSubmit={handleSubmit}>
+                        <div className='form-group'>
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor="documentUpload">Upload Passport Photo:</label>
+                            <div className="file-upload-container">
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    className="file-upload-input"
+                                    onChange={handleDocumentUpload} // Your upload handler here
+                                    accept="image/jpeg, image/png" // Adjust accepted file types as needed
+                                />
+                                <label htmlFor="file-upload" className="file-upload-label">Upload Photos</label>
+                                <i className="file-upload-icon">📷</i> {/* Replace with your preferred icon */}
+                                <div className="file-upload-text">Click to upload or drag and drop</div>
+                                <div className="file-upload-size">Max. File Size: 15MB</div>
+                            </div>
+                        </div>
+                        <button type="submit" disabled={!isDocumentProcessed}>Mint Credential</button>
+                    </form>
+                </div>
             </div>
             <Footer />
         </div>
