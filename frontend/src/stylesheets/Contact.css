@@ -25,9 +25,9 @@
 form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align form elements to the left */
+    align-items: flex-start; 
     width: 100%;
-    max-width: 500px; /* Adjust based on your preference */
+    max-width: 500px; 
 }
 
 form label {
@@ -39,16 +39,16 @@ form label {
 form input[type="text"],
 form input[type="email"],
 form textarea {
-    width: 100%; /* Full width of the form */
+    width: 80%; 
     padding: 8px;
     margin-top: 5px;
-    margin-bottom: 15px; /* Space between fields */
+    margin-bottom: 15px; 
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 form button {
-    align-self: center; /* Center the submit button */
+    align-self: center; 
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
