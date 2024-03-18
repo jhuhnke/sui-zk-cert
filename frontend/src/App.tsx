@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Uses from './components/Uses'; 
 import About from './components/About';
 import Contact from './components/Contact';  
+import Application from './components/Application'; 
 import SuccessPage from './components/SuccessPage';
 import SocialCredential from './components/SocialCredential';
 import IdentityCredential from './components/IdentityCredential'; 
@@ -46,6 +47,9 @@ const App = () => {
                     </Route>
                     <Route exact path = '/contact'>
                         <Contact />
+                    </Route>
+                    <Route exact path = '/app'>
+                        <Application />
                     </Route>
                     <Redirect to="/"></Redirect>
                 </Switch>

@@ -1,44 +1,37 @@
-import React, { FC, useState, useEffect } from 'react'; 
+import React, { FC, useEffect } from 'react'; 
+import "@splidejs/splide/dist/css/splide.min.css";
+import Splide from '@splidejs/splide';
 import '../stylesheets/CardSlider.css'; 
 
 const CardSlider: FC = () => {
-    const totalCards = 6;
-    const [currentIndex, setCurrentIndex] = useState(0);
-
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setCurrentIndex(prevIndex => (prevIndex + 1) % totalCards);
-        }, 2000); // Change cards every 2000 milliseconds (2 seconds)
-
-        return () => clearInterval(intervalId); // Clear interval on component unmount
-    }, [totalCards]);
-
-    const getContainerStyle = () => {
-        const offset = currentIndex * (100 / totalCards); // Adjusted to consider dynamic totalCards
-        return {
-            transform: `translateX(-${offset}%)`,
-        };
-    };
-
-    const cardData = [
-        { title: "Airdrops"}, 
-        { title: "Proof of Community"}, 
-        { title: "NFT Launchpads"}, 
-        { title: "Gaming and Gambling"}, 
-        { title: "Permissioned Defi"}, 
-        { title: "Influencers"}
-    ]
-
+        new Splide('.splide', {
+          type: 'loop',
+          perPage: 3,
+          focus: 'center',
+        }).mount();
+      }, []);
+    
+      const cardData = [
+        { title: "NFT Launchpads", imagePath: "./launchpad .png" },
+        { title: "Airdrops", imagePath: "./airdrop.png" },
+        { title: "Proof of Community", imagePath: "./community.png" },
+        { title: "Gaming / Gambling", imagePath: "./gaming.webp" },
+        { title: "Permissioned DeFi", imagePath: "./permissioned.webp" },
+    ];
+    
     return (
-        <div className="card-slider">
-            <div className="card-container" style={getContainerStyle()}>
-            {cardData.map((card, index) => (
-                <div key={index} className={`card ${index % 2 === 0 ? 'even' : 'odd'}`}>
-                    <div className="card-title-container">
-                        <h3 className="card-title">{card.title}</h3>
-                    </div>
-                </div>
-            ))}
+        <div className="splide">
+            <div className="splide__track">
+                <ul className="splide__list">
+                    {cardData.map((card, index) => (
+                        <li className="splide__slide" key={index}>
+                            <img src={card.imagePath} alt={card.title} className="card-image" />
+                            <h3>{card.title}</h3>
+                            <p>Description for {card.title}</p>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );

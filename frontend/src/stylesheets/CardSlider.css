@@ -1,62 +1,35 @@
-.card-slider {
+.splide {
     position: relative;
     width: 100%;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
 }
 
-.card-slider::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-}
-
-.card-container {
+.splide__list {
     display: flex;
     flex-wrap: nowrap;
-    transition: transform 0.5s ease-in-out;
-    scroll-padding-left: calc(50% - (20% + 5%)); /* Center the first card */
-    scroll-snap-type: x mandatory;
 }
 
-.card {
-    flex: 0 0 calc(35% - 10px);
-    height: 33vh; 
-    margin-right: 10px; 
-    scroll-snap-align: start; 
-    border-radius: 15px; 
-    background-color: #4DA2FF; 
-    padding: 20px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+.splide__slide {
+    flex: 0 0 calc(20% - 10px);
+    height: 45vh;
+    margin-right: 10px;
+    border-radius: 0;
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin-bottom: 20px; 
+    box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.2), 
+        -4px -4px 6px rgba(0, 0, 0, 0.2), 
+        0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+    text-align: center;
 }
 
-.card.even {
-    background-color: #4DA2FF;
+.card-image {
+    width: auto; 
+    max-height: 50%; 
+    object-fit: cover; 
+    margin-bottom: 20px;
 }
-
-.card.odd {
-    background-color: #C0E6FF;
-}
-
-.slide-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.slide-arrow.left {
-    left: 10px;
-}
-
-.slide-arrow.right {
-    right: 10px;
-}
-

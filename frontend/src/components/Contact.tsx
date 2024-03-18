@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
 import Footer from './Footer';
-import NavBar from './NavBar';
+import NavBarHome from './NavBarHome';
 import '../stylesheets/Contact.css'; 
 import { 
     SERVICE_ID, 
@@ -31,7 +31,7 @@ const Contact = () => {
 
     return (
         <div className='contact-wrapper'>
-            <NavBar />
+            <NavBarHome />
             <div className="form-container">
                 <h1>Let's Chat</h1>
                 <p className="form-description">You've got some Q's and we've got tons of A's. Ask us about our product, partnerships, what you should name your puppy... anything we can help with! Don't be shy - we promise we don't bite.</p>

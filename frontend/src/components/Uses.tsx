@@ -1,15 +1,16 @@
 import React, { FC } from 'react'; 
 import CardSlider from './CardSlider';
 import Footer from './Footer';
-import NavBar from './NavBar';
+import NavBarHome from './NavBarHome';
 import '../stylesheets/Uses.css'; 
 
 const Uses: FC = () => {
     return (
         <div className='uses-wrapper'>
-            <NavBar />
+            <NavBarHome />
             <div className="uses-container">
                 <h2 className="uses-header">zkRep KYC Use Cases</h2>
+                <p>Use Cases</p>
                 <CardSlider />
             </div>
             <Footer />
