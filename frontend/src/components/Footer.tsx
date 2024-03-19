@@ -7,8 +7,8 @@ const Footer: FC = () => {
     return (
         <footer className='footer'>
             <div className='footer-left'>
-                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><FaGithub /></a>
+                <a href="https://twitter.com/zk_reputation" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+                <a href="https://github.com/jhuhnke/sui-zk-cert" target="_blank" rel="noopener noreferrer"><FaGithub /></a>
                 <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
             </div>
             <div className='footer-right'>

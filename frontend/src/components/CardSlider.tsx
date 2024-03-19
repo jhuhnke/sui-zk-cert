@@ -16,8 +16,8 @@ const CardSlider: FC = () => {
         { title: "NFT Launchpads", imagePath: "./launchpad .png" },
         { title: "Airdrops", imagePath: "./airdrop.png" },
         { title: "Proof of Community", imagePath: "./community.png" },
-        { title: "Gaming / Gambling", imagePath: "./gaming.webp" },
-        { title: "Permissioned DeFi", imagePath: "./permissioned.webp" },
+        { title: "Gaming / Gambling", imagePath: "./gaming.png" },
+        { title: "Permissioned DeFi", imagePath: "./permissioned.png" },
     ];
     
     return (

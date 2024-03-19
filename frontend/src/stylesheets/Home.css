@@ -29,8 +29,8 @@
     display: inline-block; 
     padding: 10px 15px;
     margin: 0px 20px 0px 20px; 
-    background-color: white;
-    color: #007bff;
+    background-color: #007bff;
+    color: white;
     border: 2px solid #007bff;
     border-radius: 5px;
     cursor: pointer;
@@ -40,6 +40,6 @@
   }
   
   .button:hover {
-    background-color: #007bff;
-    color: white;
+    background-color: white;
+    color: #007bff;
   }
