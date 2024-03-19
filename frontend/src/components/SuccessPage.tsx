@@ -20,15 +20,19 @@ const SuccessPage: FC = () => {
         <div className='success-wrapper'>
             <NavBar />
             <div className="success-container">
-                <h1>Credential Minted Successfully!</h1>
-                <p>Your social media credential has been successfully minted.</p>
-                {location.state && location.state.url && (
-                    <div>
-                        <p>View your transaction:</p>
-                        <a href={location.state.url} target="_blank" rel="noopener noreferrer">{location.state.url}</a>
+                <div className='success-card'>
+                    <h1>Credential Minted Successfully!</h1>
+                    <img src='./cert.webp' alt="Profile" className='pfp' style={{ height: 200 }} />
+                    {location.state && location.state.url && (
+                        <div>
+                            <p>View your transaction:</p>
+                            <a href={location.state.url} target="_blank" rel="noopener noreferrer">{location.state.url}</a>
+                        </div>
+                    )}
+                    <div className='success-button'>
+                        <button onClick={handleGoHome}>Go to Home</button>
                     </div>
-                )}
-                <button onClick={handleGoHome}>Go to Home</button>
+                </div>
             </div>
             <Footer />
         </div>
